@@ -142,6 +142,11 @@ class Employee : IEmployee
     public string JobTitle { get; set; }
 }
 
+/*
+ * The abstract class CustomObserver implements the generic IObserver interface of type ExternalVisitor.
+ * OnCompleted, OnError, OnNext methods are abstracted because the POCNotify and SecurityStaffNotify observer classes will implement their own functionality.
+ * The methods Subscribe and UnSubscribe have same implementation for both POCNotify and SecurityStaffNotify classes. Hence the implementation we provide in this abstract class can be utilized. This is implemented to follow the DRY principle (Donot Repeat Yourself).
+ */
 abstract class CustomObserver : IObserver<ExternalVisitor>
 {
     protected IDisposable unsubscriber = null;
@@ -167,11 +172,9 @@ abstract class CustomObserver : IObserver<ExternalVisitor>
 /*
  * The POCNotify class perform a role of one of the observer
  */
-class POCNotify : IObserver<ExternalVisitor>
+class POCNotify : CustomObserver
 {
     IEmployee employee = null;
-    List<ExternalVisitor> externalVisitors = null;
-    private IDisposable unsubscriber = null;
     public POCNotify(IEmployee employee)
     {
         this.externalVisitors = new List<ExternalVisitor>();
@@ -181,7 +184,7 @@ class POCNotify : IObserver<ExternalVisitor>
     /*
      * Iterating through all external visiters assigned to current employee POC and displaying their details respectively as a report.
      */
-    public void OnCompleted()
+    public override void OnCompleted()
     {
         string heading = $"{this.employee.EmployeeName}'s daily visitor report";
         Console.WriteLine(heading);
@@ -200,7 +203,7 @@ class POCNotify : IObserver<ExternalVisitor>
     /*
      * Just call the OnError method from observable class if any exception occurs. I haven't called anywhere for avoiding try catch blocks for simplicity.
      */
-    public void OnError(Exception error)
+    public override void OnError(Exception error)
     {
         Console.WriteLine(error.Message);
         Console.WriteLine();
@@ -214,7 +217,7 @@ class POCNotify : IObserver<ExternalVisitor>
      * If the externalVisitor passed as parameter is already present in this.externalVisitors list, that means visitor is exiting now.
      * When the visitor is exiting, we simply update the properties IsInBuilding and ExitDateTime of the external visitor object in the this.externalVisitors list appropriately and print exit notification.
      */
-    public void OnNext(ExternalVisitor externalVisitor)
+    public override void OnNext(ExternalVisitor externalVisitor)
     {
         ExternalVisitor visitor = this.externalVisitors.Where(e => e.ExternalVisitorId == externalVisitor.ExternalVisitorId).FirstOrDefault();
 
@@ -260,10 +263,8 @@ class POCNotify : IObserver<ExternalVisitor>
 /*
  * The SecurityStaffNotify class performs the role of one of the observer
  */
-class SecurityStaffNotify : IObserver<ExternalVisitor>
+class SecurityStaffNotify : CustomObserver
 {
-    List<ExternalVisitor> externalVisitors = null;
-    private IDisposable unsubscriber = null;
     public SecurityStaffNotify()
     {
         this.externalVisitors = new List<ExternalVisitor>();
@@ -272,7 +273,7 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
     /*
      * Iterating through all external visiters displaying their details respectively as a report.
      */
-    public void OnCompleted()
+    public override void OnCompleted()
     {
         string heading = $"The security staff's daily visitor report";
         Console.WriteLine(heading);
@@ -288,7 +289,7 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
     /*
      * Just call OnError method on observer object from observable class, when an exception occur, to execute exception handling code of observer specific.
      */
-    public void OnError(Exception error)
+    public override void OnError(Exception error)
     {
         Console.WriteLine(error.Message);
         Console.WriteLine();
@@ -300,7 +301,7 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
      * The SecurityStaffNotify is not a single entity like POCNotify. Hence, the security staff should be notified for all the external visitors.
      * For POCNotify, a specific employee POC would be assigned with few external visitors. So we notified only applicable POCs.
      */
-    public void OnNext(ExternalVisitor externalVisitor)
+    public override void OnNext(ExternalVisitor externalVisitor)
     {
         ExternalVisitor visitor = this.externalVisitors.Where(e => e.ExternalVisitorId == externalVisitor.ExternalVisitorId).FirstOrDefault();
         //If the externalVisitor is not available in this.externalVisitors list, that means the current visitor is entering the building
