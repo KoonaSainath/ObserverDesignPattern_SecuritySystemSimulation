@@ -142,6 +142,60 @@ class Employee : IEmployee
     public string JobTitle { get; set; }
 }
 
+class POCNotify : IObserver<ExternalVisitor>
+{
+    IEmployee employee = null;
+    List<ExternalVisitor> externalVisitors = null;
+    public POCNotify(IEmployee employee)
+    {
+        this.externalVisitors = new List<ExternalVisitor>();
+        this.employee = employee;
+    }
+    public void OnCompleted()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnError(Exception error)
+    {
+        throw new NotImplementedException();
+    }
+
+    /*
+     * OnNext method is called by observable when an external visitor enters or exits the company building.
+     * If the externalVisitor passed as parameter isn't available in this.externalVisitors list, that means the visitor is entering now.
+     * When visitor is entering, we simply add the visitor object to this.externalVisitors list and print the entry notification.
+     * If the externalVisitor passed as parameter is already present in this.externalVisitors list, that means visitor is exiting now.
+     * When the visitor is exiting, we simply update the properties IsInBuilding and ExitDateTime of the external visitor object in the this.externalVisitors list appropriately and print exit notification.
+     */
+    public void OnNext(ExternalVisitor externalVisitor)
+    {
+        ExternalVisitor visitor = this.externalVisitors.Where(e => e.ExternalVisitorId == externalVisitor.ExternalVisitorId).FirstOrDefault();
+
+        //If visitor doesn't exist in this.externalVisitors, that means this is entry notification.
+        if(visitor is null)
+        {
+            //To ensure we only notify the assigned POC employee about current external visitor's entry.
+            if(externalVisitor.POCEmployeeId == this.employee.EmployeeId)
+            {
+                this.externalVisitors.Add(externalVisitor);
+                Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! You visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
+            }
+        }
+        //If visitor already exist in this.externalVisitors, that means this is exit notification.
+        else
+        {
+            //To ensure we only notify the assigned POC employee about current external visitor's exit.
+            if(externalVisitor.POCEmployeeId == this.employee.EmployeeId)
+            {
+                visitor.IsInBuilding = false;
+                visitor.ExitDateTime = externalVisitor.ExitDateTime;
+                Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! You visitor {externalVisitor.ExternalVisitorName} has exit at {externalVisitor.ExitDateTime}");
+            }
+        }
+    }
+}
+
 public class Program
 {
     public static void Main(string[] args)
