@@ -142,6 +142,9 @@ class Employee : IEmployee
     public string JobTitle { get; set; }
 }
 
+/*
+ * The POCNotify class perform a role of one of the observer
+ */
 class POCNotify : IObserver<ExternalVisitor>
 {
     IEmployee employee = null;
@@ -217,6 +220,27 @@ class POCNotify : IObserver<ExternalVisitor>
                 Console.WriteLine();
             }
         }
+    }
+}
+
+/*
+ * The SecurityStaffNotify class performs the role of one of the observer
+ */
+class SecurityStaffNotify : IObserver<ExternalVisitor>
+{
+    public void OnCompleted()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnError(Exception error)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void OnNext(ExternalVisitor value)
+    {
+        throw new NotImplementedException();
     }
 }
 
