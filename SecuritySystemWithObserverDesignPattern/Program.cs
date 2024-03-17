@@ -233,9 +233,21 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
     {
         this.externalVisitors = new List<ExternalVisitor>();
     }
+
+    /*
+     * Iterating through all external visiters displaying their details respectively as a report.
+     */
     public void OnCompleted()
     {
-        throw new NotImplementedException();
+        string heading = $"The security staff's daily visitor report";
+        Console.WriteLine(heading);
+        Console.WriteLine(new string('-', heading.Length));
+        Console.WriteLine();
+        foreach (ExternalVisitor visitor in this.externalVisitors)
+        {
+            Console.WriteLine($"{visitor.ExternalVisitorId.ToString().PadRight(visitor.ExternalVisitorId.ToString().Length + 10)}{visitor.ExternalVisitorName.PadRight(visitor.ExternalVisitorName.Length + 10)}Entry:{visitor.EntryDateTime.ToString("dd MMM yyyy hh:mm:ss tt").PadRight(visitor.EntryDateTime.ToString().Length + 10)}Exit:{visitor.ExitDateTime.ToString("dd MMM yyyy hh:mm:ss tt").PadRight(visitor.ExitDateTime.ToString().Length + 10)}");
+            Console.WriteLine();
+        }
     }
 
     /*
