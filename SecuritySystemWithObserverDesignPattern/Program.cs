@@ -345,6 +345,29 @@ static class Factory<R,L> where L : class, R, new()
     }
 }
 
+static class ProduceInstances
+{
+    public static IEmployee ProduceEmployeeInstance(int employeeId, string employeeName, string jobTitle)
+    {
+        IEmployee employee = Factory<IEmployee, Employee>.GetInstance();
+        employee.EmployeeId = employeeId;
+        employee.EmployeeName = employeeName;
+        employee.JobTitle = jobTitle;
+        return employee;
+    }
+    public static ExternalVisitor ProduceExternalVisitorInstance(int externalVisitorId, string externalVisitorName, bool isInBuilding, string purposeOfVisit, int pocEmployeeId, DateTime entryDateTime)
+    {
+        ExternalVisitor externalVisitor = Factory<ExternalVisitor, ExternalVisitor>.GetInstance();
+        externalVisitor.ExternalVisitorId = externalVisitorId;
+        externalVisitor.ExternalVisitorName = externalVisitorName;
+        externalVisitor.IsInBuilding = isInBuilding;
+        externalVisitor.PurposeOfVisit = purposeOfVisit;
+        externalVisitor.POCEmployeeId = pocEmployeeId;
+        externalVisitor.EntryDateTime = entryDateTime;
+        return externalVisitor;
+    }
+}
+
 public class Program
 {
     public static void Main(string[] args)
@@ -353,20 +376,10 @@ public class Program
         SecuritySystem observableSecuritySystem = new SecuritySystem();
 
         //Creating instance of poc empoyee-1 Jimmy
-        IEmployee poc1 = new Employee()
-        {
-            EmployeeId = 1,
-            EmployeeName = "Jimmy",
-            JobTitle = "Auditor"
-        };
+        IEmployee poc1 = ProduceInstances.ProduceEmployeeInstance(1, "Jimmy", "Auditor");
 
         //Creating instance of poc employee-2 Chuck
-        IEmployee poc2 = new Employee()
-        {
-            EmployeeId = 2,
-            EmployeeName = "Chuck",
-            JobTitle = "Senior Auditor"
-        };
+        IEmployee poc2 = ProduceInstances.ProduceEmployeeInstance(1, "Chuck", "Senior Auditor");
 
         //Observer-1 the POCNotify is instantiated for poc-1
         POCNotify observerPOC1 = new POCNotify(poc1);
@@ -387,70 +400,22 @@ public class Program
         observerSecurityStaff.Subscribe(observableSecuritySystem);
 
         //Creating instance of visitor1
-        ExternalVisitor visitor1 = new ExternalVisitor()
-        {
-            ExternalVisitorId = 10,
-            ExternalVisitorName = "Kim",
-            IsInBuilding = true,
-            PurposeOfVisit = "Business meeting",
-            POCEmployeeId = 1,
-            EntryDateTime = DateTime.Now
-        };
+        ExternalVisitor visitor1 = ProduceInstances.ProduceExternalVisitorInstance(10,"Kim",true,"Business meeting",1,DateTime.Now);
 
         //Creating instance of visitor2
-        ExternalVisitor visitor2 = new ExternalVisitor()
-        {
-            ExternalVisitorId = 20,
-            ExternalVisitorName = "Howard",
-            IsInBuilding = true,
-            PurposeOfVisit = "Casual discussion",
-            POCEmployeeId = 1,
-            EntryDateTime = DateTime.Now
-        };
+        ExternalVisitor visitor2 = ProduceInstances.ProduceExternalVisitorInstance(20, "Howard", true, "Casual discussion", 1, DateTime.Now);
 
         //Creating instance of visitor3
-        ExternalVisitor visitor3 = new ExternalVisitor()
-        {
-            ExternalVisitorId = 30,
-            ExternalVisitorName = "Walt",
-            IsInBuilding = true,
-            PurposeOfVisit = "Make a deal",
-            POCEmployeeId = 1,
-            EntryDateTime = DateTime.Now
-        };
+        ExternalVisitor visitor3 = ProduceInstances.ProduceExternalVisitorInstance(30, "Walt", true, "Make a deal", 1, DateTime.Now);
 
         //Creating instance of visitor4
-        ExternalVisitor visitor4 = new ExternalVisitor()
-        {
-            ExternalVisitorId = 40,
-            ExternalVisitorName = "Jessie",
-            IsInBuilding = true,
-            PurposeOfVisit = "Seeking help",
-            POCEmployeeId = 2,
-            EntryDateTime = DateTime.Now
-        };
+        ExternalVisitor visitor4 = ProduceInstances.ProduceExternalVisitorInstance(40, "Jessie", true, "Seeking help", 2, DateTime.Now);
 
         //Creating instance of visitor5
-        ExternalVisitor visitor5 = new ExternalVisitor()
-        {
-            ExternalVisitorId = 50,
-            ExternalVisitorName = "Tuco",
-            IsInBuilding = true,
-            PurposeOfVisit = "Warning",
-            POCEmployeeId = 2,
-            EntryDateTime = DateTime.Now
-        };
+        ExternalVisitor visitor5 = ProduceInstances.ProduceExternalVisitorInstance(50, "Tuco", true, "Warning", 2, DateTime.Now);
 
         //Creating instance of visitor6
-        ExternalVisitor visitor6 = new ExternalVisitor()
-        {
-            ExternalVisitorId = 60,
-            ExternalVisitorName = "Nacho",
-            IsInBuilding = true,
-            PurposeOfVisit = "Side business",
-            POCEmployeeId = 2,
-            EntryDateTime = DateTime.Now
-        };
+        ExternalVisitor visitor6 = ProduceInstances.ProduceExternalVisitorInstance(60, "Gus", true, "Start new business", 2, DateTime.Now);
 
         //Visitor1 enters the building
         observableSecuritySystem.ExternalVisitorEntered(visitor1);
