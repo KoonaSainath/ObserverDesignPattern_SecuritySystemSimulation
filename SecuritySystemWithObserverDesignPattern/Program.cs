@@ -151,9 +151,24 @@ class POCNotify : IObserver<ExternalVisitor>
         this.externalVisitors = new List<ExternalVisitor>();
         this.employee = employee;
     }
+
+    /*
+     * Iterating through all external visiters assigned to current employee POC and displaying their details respectively as a report.
+     */
     public void OnCompleted()
     {
-        throw new NotImplementedException();
+        string heading = $"{this.employee.EmployeeName}'s daily visitor report";
+        Console.WriteLine(heading);
+        Console.WriteLine(new string('-', heading.Length));
+        Console.WriteLine();
+        foreach(ExternalVisitor visitor in this.externalVisitors)
+        {
+            if(visitor.POCEmployeeId == this.employee.EmployeeId)
+            {
+                Console.WriteLine($"{visitor.ExternalVisitorId.ToString().PadRight(visitor.ExternalVisitorId.ToString().Length + 10)}{visitor.ExternalVisitorName.PadRight(visitor.ExternalVisitorName.Length + 10)}Entry:{visitor.EntryDateTime.ToString("dd MMM yyyy hh:mm:ss tt").PadRight(visitor.EntryDateTime.ToString().Length + 10)}Exit:{visitor.ExitDateTime.ToString("dd MMM yyyy hh:mm:ss tt").PadRight(visitor.ExitDateTime.ToString().Length + 10)}");
+                Console.WriteLine();
+            }
+        }
     }
 
     /*
