@@ -11,6 +11,7 @@ public class ExternalVisitor
     public DateTime EntryDateTime { get; set; }
     public DateTime ExitDateTime { get; set; }
     public bool IsInBuilding { get; set; }
+    public int POCEmployeeId { get; set; }
 }
 
 /*
@@ -118,6 +119,27 @@ class SecuritySystem : IObservable<ExternalVisitor>
             observer.OnCompleted();
         }
     }
+}
+
+/*
+ * The IEmployee interface to represent properties to be implemented for an employee.
+ */
+interface IEmployee
+{
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; }
+    public string JobTitle { get; set; }
+}
+
+/*
+ * The Employee class implementing IEmployee interface to represent a POC employee assigned to an external visitor.
+ * The instance of Employee is used in the POCNotify observer class.
+ */
+class Employee : IEmployee
+{
+    public int EmployeeId { get; set; }
+    public string EmployeeName { get; set; }
+    public string JobTitle { get; set; }
 }
 
 public class Program
