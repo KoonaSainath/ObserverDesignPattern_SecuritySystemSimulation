@@ -335,6 +335,16 @@ class SecurityStaffNotify : CustomObserver
     }
 }
 
+static class Factory<R,L> where L : class, R, new()
+{
+    public static R GetInstance()
+    {
+        R r;
+        r = new L();
+        return r;
+    }
+}
+
 public class Program
 {
     public static void Main(string[] args)
