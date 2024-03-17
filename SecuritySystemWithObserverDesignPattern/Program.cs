@@ -238,9 +238,14 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
         throw new NotImplementedException();
     }
 
+    /*
+     * Just call OnError method on observer object from observable class, when an exception occur, to execute exception handling code of observer specific.
+     */
     public void OnError(Exception error)
     {
-        throw new NotImplementedException();
+        Console.WriteLine(error.Message);
+        Console.WriteLine();
+        Console.WriteLine(error.ToString());
     }
 
     /*
