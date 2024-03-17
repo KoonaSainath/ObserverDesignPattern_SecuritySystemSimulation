@@ -19,10 +19,27 @@ public class ExternalVisitor
  */
 class SecuritySystem : IObservable<ExternalVisitor>
 {
+    //The "externalVisitors" list acts as a data store that stores all external visitor objects who has entered the building.
+    List<ExternalVisitor> externalVisitors = null;
+
+    //The "observers" list stores all the observer objects which are subscribed to current observable
+    List<IObserver<ExternalVisitor>> observers = null;
+    public SecuritySystem()
+    {
+        this.externalVisitors = new List<ExternalVisitor>();
+        this.observers = new List<IObserver<ExternalVisitor>>();
+    }
+
+    /*
+     * The Subscribe method is defined in IObservable generic interface.
+     * An observer calls this method to subscribe to this observable for notifications.
+     * We simply add the observer to the "observers" list instance variable on calling the Subscribe method on our observable
+     */ 
     public IDisposable Subscribe(IObserver<ExternalVisitor> observer)
     {
         throw new NotImplementedException();
     }
+
 }
 
 public class Program
