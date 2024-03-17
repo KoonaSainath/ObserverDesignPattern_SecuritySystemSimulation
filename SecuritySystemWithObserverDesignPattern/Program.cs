@@ -156,9 +156,14 @@ class POCNotify : IObserver<ExternalVisitor>
         throw new NotImplementedException();
     }
 
+    /*
+     * Just call the OnError method from observable class if any exception occurs. I haven't called anywhere for avoiding try catch blocks for simplicity.
+     */
     public void OnError(Exception error)
     {
-        throw new NotImplementedException();
+        Console.WriteLine(error.Message);
+        Console.WriteLine();
+        Console.WriteLine(error.ToString());
     }
 
     /*
@@ -179,7 +184,9 @@ class POCNotify : IObserver<ExternalVisitor>
             if(externalVisitor.POCEmployeeId == this.employee.EmployeeId)
             {
                 this.externalVisitors.Add(externalVisitor);
+                Console.WriteLine();
                 Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! You visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
+                Console.WriteLine();
             }
         }
         //If visitor already exist in this.externalVisitors, that means this is exit notification.
@@ -190,7 +197,9 @@ class POCNotify : IObserver<ExternalVisitor>
             {
                 visitor.IsInBuilding = false;
                 visitor.ExitDateTime = externalVisitor.ExitDateTime;
+                Console.WriteLine();
                 Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! You visitor {externalVisitor.ExternalVisitorName} has exit at {externalVisitor.ExitDateTime}");
+                Console.WriteLine();
             }
         }
     }
