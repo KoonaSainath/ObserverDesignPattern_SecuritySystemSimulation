@@ -57,6 +57,25 @@ class SecuritySystem : IObservable<ExternalVisitor>
             }
         }
     }
+
+    /*
+     * ExternalVisitorExited method is called when an external visitor exited the company building.
+     * To represent which visitor exited, we mandated 2 parameters the externalVisitorId which is unique id of a visitor and exited date time.
+     * We are updating the ExitDateTime property and IsInBuilding property according to exit of the visitor and notifying all the observers.
+     */
+    public void ExternalVisitorExited(int externalVisitorId, DateTime exitedDateTime)
+    {
+        ExternalVisitor externalVisitor = this.externalVisitors.Where(e => e.ExternalVisitorId == externalVisitorId).FirstOrDefault();
+        if(externalVisitor != null)
+        {
+            externalVisitor.ExitDateTime = exitedDateTime;
+            externalVisitor.IsInBuilding = false;
+            foreach(IObserver<ExternalVisitor> observer in this.observers)
+            {
+                observer.OnNext(externalVisitor);
+            }
+        }
+    }
 }
 
 public class Program
