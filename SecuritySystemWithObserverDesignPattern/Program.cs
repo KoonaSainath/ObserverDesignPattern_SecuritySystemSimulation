@@ -40,6 +40,23 @@ class SecuritySystem : IObservable<ExternalVisitor>
         throw new NotImplementedException();
     }
 
+    /*
+     * ExternalVisitorEntered method is called when an external visitor entered the building.
+     * We are simply adding the externalVisitor object to the data store the observable is maintaining, i.e., the list "externalVisitors"
+     * Then we are iterating through all available observers and sending notifications by calling "OnNext" method of each observer.
+     * We pass the externalVisitor object to OnNext method. Understand that, "externalVisitor" object is the communicated data between observable & observer.
+     */ 
+    public void ExternalVisitorEntered(ExternalVisitor externalVisitor)
+    {
+        if (!this.externalVisitors.Contains(externalVisitor))
+        {
+            this.externalVisitors.Add(externalVisitor);
+            foreach(IObserver<ExternalVisitor> observer in this.observers)
+            {
+                observer.OnNext(externalVisitor);
+            }
+        }
+    }
 }
 
 public class Program
