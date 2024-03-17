@@ -229,7 +229,7 @@ class POCNotify : CustomObserver
             {
                 this.externalVisitors.Add(externalVisitor);
                 Console.WriteLine();
-                Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! You visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
+                Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! Your visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
                 Console.WriteLine();
             }
         }
@@ -339,6 +339,148 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        //The central observable is instantiated
+        SecuritySystem observableSecuritySystem = new SecuritySystem();
+
+        //Creating instance of poc empoyee-1 Jimmy
+        IEmployee poc1 = new Employee()
+        {
+            EmployeeId = 1,
+            EmployeeName = "Jimmy",
+            JobTitle = "Auditor"
+        };
+
+        //Creating instance of poc employee-2 Chuck
+        IEmployee poc2 = new Employee()
+        {
+            EmployeeId = 2,
+            EmployeeName = "Chuck",
+            JobTitle = "Senior Auditor"
+        };
+
+        //Observer-1 the POCNotify is instantiated for poc-1
+        POCNotify observerPOC1 = new POCNotify(poc1);
+
+        //Observer-2 the POCNotify is instantiated for poc-2
+        POCNotify observerPOC2 = new POCNotify(poc2);
+
+        //Observer-3 the SecurityStaffNotify is instantiated for Security Staff folks
+        SecurityStaffNotify observerSecurityStaff = new SecurityStaffNotify();
+
+        //Observer-1 subscribing to central observable
+        observerPOC1.Subscribe(observableSecuritySystem);
+
+        //Observer-2 subscribing to central obsersable
+        observerPOC2.Subscribe(observableSecuritySystem);
+
+        //Observer-3 subscribing to central observable
+        observerSecurityStaff.Subscribe(observableSecuritySystem);
+
+        //Creating instance of visitor1
+        ExternalVisitor visitor1 = new ExternalVisitor()
+        {
+            ExternalVisitorId = 10,
+            ExternalVisitorName = "Kim",
+            IsInBuilding = true,
+            PurposeOfVisit = "Business meeting",
+            POCEmployeeId = 1,
+            EntryDateTime = DateTime.Now
+        };
+
+        //Creating instance of visitor2
+        ExternalVisitor visitor2 = new ExternalVisitor()
+        {
+            ExternalVisitorId = 20,
+            ExternalVisitorName = "Howard",
+            IsInBuilding = true,
+            PurposeOfVisit = "Casual discussion",
+            POCEmployeeId = 1,
+            EntryDateTime = DateTime.Now
+        };
+
+        //Creating instance of visitor3
+        ExternalVisitor visitor3 = new ExternalVisitor()
+        {
+            ExternalVisitorId = 30,
+            ExternalVisitorName = "Walt",
+            IsInBuilding = true,
+            PurposeOfVisit = "Make a deal",
+            POCEmployeeId = 1,
+            EntryDateTime = DateTime.Now
+        };
+
+        //Creating instance of visitor4
+        ExternalVisitor visitor4 = new ExternalVisitor()
+        {
+            ExternalVisitorId = 40,
+            ExternalVisitorName = "Jessie",
+            IsInBuilding = true,
+            PurposeOfVisit = "Seeking help",
+            POCEmployeeId = 2,
+            EntryDateTime = DateTime.Now
+        };
+
+        //Creating instance of visitor5
+        ExternalVisitor visitor5 = new ExternalVisitor()
+        {
+            ExternalVisitorId = 50,
+            ExternalVisitorName = "Tuco",
+            IsInBuilding = true,
+            PurposeOfVisit = "Warning",
+            POCEmployeeId = 2,
+            EntryDateTime = DateTime.Now
+        };
+
+        //Creating instance of visitor6
+        ExternalVisitor visitor6 = new ExternalVisitor()
+        {
+            ExternalVisitorId = 60,
+            ExternalVisitorName = "Nacho",
+            IsInBuilding = true,
+            PurposeOfVisit = "Side business",
+            POCEmployeeId = 2,
+            EntryDateTime = DateTime.Now
+        };
+
+        //Visitor1 enters the building
+        observableSecuritySystem.ExternalVisitorEntered(visitor1);
+
+        //Visitor2 enters the building
+        observableSecuritySystem.ExternalVisitorEntered(visitor2);
+
+        //Visitor1 exits the building
+        observableSecuritySystem.ExternalVisitorExited(10, DateTime.Now);
+
+        //Visitor3 enters the building
+        observableSecuritySystem.ExternalVisitorEntered(visitor3);
+
+        //Visitor4 enters the building
+        observableSecuritySystem.ExternalVisitorEntered(visitor4);
+
+        //Visitor 3 exits the building
+        observableSecuritySystem.ExternalVisitorExited(30, DateTime.Now);
+
+        //Visitor 5 enters the building
+        observableSecuritySystem.ExternalVisitorEntered(visitor5);
+
+        //Visitor 6 enters the building
+        observableSecuritySystem.ExternalVisitorEntered(visitor6);
+
+        //Visitor 2 exits the building
+        observableSecuritySystem.ExternalVisitorExited(20, DateTime.Now);
+
+        //Visitor 4 exits the building
+        observableSecuritySystem.ExternalVisitorExited(40, DateTime.Now);
+
+        //Visitor 5 exits the building
+        observableSecuritySystem.ExternalVisitorExited(50, DateTime.Now);
+
+        //Visitor 6 exits the building
+        observableSecuritySystem.ExternalVisitorExited(60, DateTime.Now);
+
+        //Completing the work day of the company to declare that no further notifications will be sent
+        observableSecuritySystem.EndTheWorkDayOfCompany();
+
         Console.ReadKey();
     }
 }
