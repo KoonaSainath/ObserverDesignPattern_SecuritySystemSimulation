@@ -12,6 +12,31 @@ public class ExternalVisitor
 }
 
 /*
+ * UnSubscriber class implements the built-in interface IDisposable. This is required for the observable's Subscribe method to be returned.
+ * Using IDisposable object returned to observer from Subscribe method of observable, the observer can call Dispose method to unsubscribe from observable.
+ * The constructor just accepts the total list of observers and current observer subscribing to the observable.
+ * In the Dispose method implementation, we simply check if the observer is present in the list, if yes, we remove the observer from the list.
+ * This indicates that, the observer is successfully removed from list of observers of the observable, results in unsubscribing from notifications.
+ */
+class UnSubscriber : IDisposable
+{
+    private List<IObserver<ExternalVisitor>> observers = null;
+    private IObserver<ExternalVisitor> observer = null;
+    public UnSubscriber(List<IObserver<ExternalVisitor>> observers, IObserver<ExternalVisitor> observer)
+    {
+        this.observers = observers;
+        this.observer = observer;
+    }
+    public void Dispose()
+    {
+        if (this.observers.Contains(this.observer))
+        {
+            this.observers.Remove(observer);
+        }
+    }
+}
+
+/*
  * SecuritySystem class performs the role as an observable (provider). 
  * Implements generic interface IObservable<ExternalVisitor> to get strongly typed with the ExternalVisitor
  * Subscribe(IObserver<ExternalVisitor> is the only method defined in IObservable interface, hence, this need to be implemented mandatorily
@@ -33,11 +58,14 @@ class SecuritySystem : IObservable<ExternalVisitor>
     /*
      * The Subscribe method is defined in IObservable generic interface.
      * An observer calls this method to subscribe to this observable for notifications.
-     * We simply add the observer to the "observers" list instance variable on calling the Subscribe method on our observable
+     * We simply add the observer to the "observers" list instance variable on calling the Subscribe method on our observable.
+     * We have to return an IDisposable so that, the observer can call the Dispose method defined in IDisposable interface, to unsubscribe from observable.
      */ 
     public IDisposable Subscribe(IObserver<ExternalVisitor> observer)
     {
-        throw new NotImplementedException();
+        this.observers.Add(observer);
+        IDisposable unsubscriber = new UnSubscriber(this.observers, observer);
+        return unsubscriber;
     }
 
     /*
