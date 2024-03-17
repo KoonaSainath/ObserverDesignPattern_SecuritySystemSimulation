@@ -142,6 +142,28 @@ class Employee : IEmployee
     public string JobTitle { get; set; }
 }
 
+abstract class CustomObserver : IObserver<ExternalVisitor>
+{
+    protected IDisposable unsubscriber = null;
+    protected List<ExternalVisitor> externalVisitors = null;
+    public abstract void OnCompleted();
+
+    public abstract void OnError(Exception error);
+
+    public abstract void OnNext(ExternalVisitor value);
+
+    public void Subscribe(IObservable<ExternalVisitor> securitySystemObservable)
+    {
+        unsubscriber = securitySystemObservable.Subscribe(this);
+    }
+
+    public void UnSubscribe()
+    {
+        this.unsubscriber.Dispose();
+        this.externalVisitors.Clear();
+    }
+}
+
 /*
  * The POCNotify class perform a role of one of the observer
  */
