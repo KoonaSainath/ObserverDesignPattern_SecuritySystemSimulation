@@ -216,7 +216,7 @@ class POCNotify : IObserver<ExternalVisitor>
                 visitor.IsInBuilding = false;
                 visitor.ExitDateTime = externalVisitor.ExitDateTime;
                 Console.WriteLine();
-                Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! You visitor {externalVisitor.ExternalVisitorName} has exit at {externalVisitor.ExitDateTime}");
+                Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! Your visitor {externalVisitor.ExternalVisitorName} has exited at {externalVisitor.ExitDateTime}");
                 Console.WriteLine();
             }
         }
@@ -228,6 +228,11 @@ class POCNotify : IObserver<ExternalVisitor>
  */
 class SecurityStaffNotify : IObserver<ExternalVisitor>
 {
+    List<ExternalVisitor> externalVisitors = null;
+    public SecurityStaffNotify()
+    {
+        this.externalVisitors = new List<ExternalVisitor>();
+    }
     public void OnCompleted()
     {
         throw new NotImplementedException();
@@ -238,9 +243,31 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
         throw new NotImplementedException();
     }
 
-    public void OnNext(ExternalVisitor value)
+    /*
+     * OnNext method is called when an external visitor is entering the building.
+     * The SecurityStaffNotify is not a single entity like POCNotify. Hence, the security staff should be notified for all the external visitors.
+     * For POCNotify, a specific employee POC would be assigned with few external visitors. So we notified only applicable POCs.
+     */
+    public void OnNext(ExternalVisitor externalVisitor)
     {
-        throw new NotImplementedException();
+        ExternalVisitor visitor = this.externalVisitors.Where(e => e.ExternalVisitorId == externalVisitor.ExternalVisitorId).FirstOrDefault();
+        //If the externalVisitor is not available in this.externalVisitors list, that means the current visitor is entering the building
+        if(visitor == null)
+        {
+            this.externalVisitors.Add(externalVisitor);
+            Console.WriteLine();
+            Console.WriteLine($"Employee notification: Hey security staff folks! The visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
+            Console.WriteLine();
+        }
+        //If the externalVisitor is already available in this.externalVisitors list, that means the current visitor is exiting the building
+        else
+        {
+            visitor.ExitDateTime = externalVisitor.ExitDateTime;
+            visitor.IsInBuilding = false;
+            Console.WriteLine();
+            Console.WriteLine($"Employee notification: Hey security staff folks! The visitor {externalVisitor.ExternalVisitorName} has exited at {externalVisitor.ExitDateTime}");
+            Console.WriteLine();
+        }
     }
 }
 
