@@ -186,6 +186,8 @@ class POCNotify : CustomObserver
      */
     public override void OnCompleted()
     {
+        Console.ResetColor();
+        ConsoleStyle.SetConsoleStyle(ConsoleStyle.Style.POC);
         string heading = $"{this.employee.EmployeeName}'s daily visitor report";
         Console.WriteLine(heading);
         Console.WriteLine(new string('-', heading.Length));
@@ -198,6 +200,7 @@ class POCNotify : CustomObserver
                 Console.WriteLine();
             }
         }
+        Console.ResetColor();
     }
 
     /*
@@ -229,7 +232,10 @@ class POCNotify : CustomObserver
             {
                 this.externalVisitors.Add(externalVisitor);
                 Console.WriteLine();
+                Console.ResetColor();
+                ConsoleStyle.SetConsoleStyle(ConsoleStyle.Style.POC);
                 Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! Your visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
+                Console.ResetColor();
                 Console.WriteLine();
             }
         }
@@ -242,7 +248,10 @@ class POCNotify : CustomObserver
                 visitor.IsInBuilding = false;
                 visitor.ExitDateTime = externalVisitor.ExitDateTime;
                 Console.WriteLine();
+                Console.ResetColor();
+                ConsoleStyle.SetConsoleStyle(ConsoleStyle.Style.POC);
                 Console.WriteLine($"Employee notification: Hey {this.employee.EmployeeName}! Your visitor {externalVisitor.ExternalVisitorName} has exited at {externalVisitor.ExitDateTime}");
+                Console.ResetColor();
                 Console.WriteLine();
             }
         }
@@ -275,6 +284,8 @@ class SecurityStaffNotify : CustomObserver
      */
     public override void OnCompleted()
     {
+        Console.ResetColor();
+        ConsoleStyle.SetConsoleStyle(ConsoleStyle.Style.SecurityStaff);
         string heading = $"The security staff's daily visitor report";
         Console.WriteLine(heading);
         Console.WriteLine(new string('-', heading.Length));
@@ -284,6 +295,7 @@ class SecurityStaffNotify : CustomObserver
             Console.WriteLine($"{visitor.ExternalVisitorId.ToString().PadRight(visitor.ExternalVisitorId.ToString().Length + 10)}{visitor.ExternalVisitorName.PadRight(visitor.ExternalVisitorName.Length + 10)}Entry:{visitor.EntryDateTime.ToString("dd MMM yyyy hh:mm:ss tt").PadRight(visitor.EntryDateTime.ToString().Length + 10)}Exit:{visitor.ExitDateTime.ToString("dd MMM yyyy hh:mm:ss tt").PadRight(visitor.ExitDateTime.ToString().Length + 10)}");
             Console.WriteLine();
         }
+        Console.ResetColor();
     }
 
     /*
@@ -309,7 +321,10 @@ class SecurityStaffNotify : CustomObserver
         {
             this.externalVisitors.Add(externalVisitor);
             Console.WriteLine();
+            Console.ResetColor();
+            ConsoleStyle.SetConsoleStyle(ConsoleStyle.Style.SecurityStaff);
             Console.WriteLine($"Employee notification: Hey security staff folks! The visitor {externalVisitor.ExternalVisitorName} has entered at {externalVisitor.EntryDateTime} for {externalVisitor.PurposeOfVisit.ToLower()}");
+            Console.ResetColor();
             Console.WriteLine();
         }
         //If the externalVisitor is already available in this.externalVisitors list, that means the current visitor is exiting the building
@@ -318,7 +333,10 @@ class SecurityStaffNotify : CustomObserver
             visitor.ExitDateTime = externalVisitor.ExitDateTime;
             visitor.IsInBuilding = false;
             Console.WriteLine();
+            Console.ResetColor();
+            ConsoleStyle.SetConsoleStyle(ConsoleStyle.Style.SecurityStaff);
             Console.WriteLine($"Employee notification: Hey security staff folks! The visitor {externalVisitor.ExternalVisitorName} has exited at {externalVisitor.ExitDateTime}");
+            Console.ResetColor();
             Console.WriteLine();
         }
     }
@@ -365,6 +383,34 @@ static class ProduceInstances
         externalVisitor.POCEmployeeId = pocEmployeeId;
         externalVisitor.EntryDateTime = entryDateTime;
         return externalVisitor;
+    }
+}
+
+static class ConsoleStyle
+{
+    public enum Style
+    {
+        POC,
+        SecurityStaff,
+        Default
+    }
+
+    public static void SetConsoleStyle(Style style)
+    {
+        switch (style)
+        {
+            case Style.POC:
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+                break;
+            case Style.SecurityStaff:
+                Console.BackgroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Black;
+                break;
+            default:
+                Console.ResetColor();
+                break;
+        }
     }
 }
 
