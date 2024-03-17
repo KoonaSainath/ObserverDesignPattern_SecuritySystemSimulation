@@ -1,6 +1,8 @@
 ﻿namespace SecuritySystemWithObserverDesignPattern.ConsoleApplication;
 
-//ExternalVisitor class representing an external visitor who enters/exits the company building
+/*
+ * ExternalVisitor class representing an external visitor who enters/exits the company building
+ */
 public class ExternalVisitor
 {
     public int ExternalVisitorId { get; set; }
