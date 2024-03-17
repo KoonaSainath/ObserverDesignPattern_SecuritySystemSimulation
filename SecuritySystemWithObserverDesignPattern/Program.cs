@@ -149,6 +149,7 @@ class POCNotify : IObserver<ExternalVisitor>
 {
     IEmployee employee = null;
     List<ExternalVisitor> externalVisitors = null;
+    private IDisposable unsubscriber = null;
     public POCNotify(IEmployee employee)
     {
         this.externalVisitors = new List<ExternalVisitor>();
@@ -221,6 +222,17 @@ class POCNotify : IObserver<ExternalVisitor>
             }
         }
     }
+
+    public void Subscribe(IObservable<ExternalVisitor> securitySystemObservable)
+    {
+        unsubscriber = securitySystemObservable.Subscribe(this);
+    }
+
+    public void UnSubscribe()
+    {
+        unsubscriber.Dispose();
+        this.externalVisitors.Clear();
+    }
 }
 
 /*
@@ -229,6 +241,7 @@ class POCNotify : IObserver<ExternalVisitor>
 class SecurityStaffNotify : IObserver<ExternalVisitor>
 {
     List<ExternalVisitor> externalVisitors = null;
+    private IDisposable unsubscriber = null;
     public SecurityStaffNotify()
     {
         this.externalVisitors = new List<ExternalVisitor>();
@@ -285,6 +298,17 @@ class SecurityStaffNotify : IObserver<ExternalVisitor>
             Console.WriteLine($"Employee notification: Hey security staff folks! The visitor {externalVisitor.ExternalVisitorName} has exited at {externalVisitor.ExitDateTime}");
             Console.WriteLine();
         }
+    }
+
+    public void Subscribe(IObservable<ExternalVisitor> securitySystemObservable)
+    {
+        this.unsubscriber = securitySystemObservable.Subscribe(this);
+    }
+
+    public void UnSubscribe(IObservable<ExternalVisitor> securitySystemObservable)
+    {
+        unsubscriber.Dispose();
+        this.externalVisitors.Clear();
     }
 }
 
