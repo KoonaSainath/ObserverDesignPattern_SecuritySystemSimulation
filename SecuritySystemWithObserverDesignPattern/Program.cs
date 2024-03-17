@@ -76,6 +76,18 @@ class SecuritySystem : IObservable<ExternalVisitor>
             }
         }
     }
+
+    /*
+     * EndTheWorkDayOfCompany method is called to represent that company work time is over for the day.
+     * We are just calling the OnComplete method of each observer, indicating that, the observable won't send any further notifications.
+     */
+    public void EndTheWorkDayOfCompany()
+    {
+        foreach(IObserver<ExternalVisitor> observer in this.observers)
+        {
+            observer.OnCompleted();
+        }
+    }
 }
 
 public class Program
